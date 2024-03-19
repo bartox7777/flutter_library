@@ -13,3 +13,12 @@ jobs:
     steps:
       - name: Flutter action
         uses: subosito/flutter-action@v2.13.0    
+
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.3'
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk
+      - run: flutter build appbundle
