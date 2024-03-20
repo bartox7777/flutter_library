@@ -1,0 +1,6 @@
+{
+  "appTitle": "libsys",
+  "@appTitle": {
+    "description": "Tytuł aplikacji"
+  }
+}

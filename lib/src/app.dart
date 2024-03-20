@@ -7,6 +7,8 @@ import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
+import 'handle_api/library_api.dart';
+
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: const [
             Locale('en', ''), // English, no country code
+            Locale('pl', ''), // Polish, no country code
           ],
 
           // Use AppLocalizations to configure the correct application title
@@ -59,6 +62,8 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
+
+
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
