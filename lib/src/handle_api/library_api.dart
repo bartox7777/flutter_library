@@ -3,17 +3,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class LibraryApi {
-  static const String _baseUrl = 'http://127.0.0.1:5000/api';
+  static const String _baseUrl =
+      'https://libsys-api-b88eb4c3d18e.herokuapp.com/api';
 
   Future<List<Book>> getBooks() async {
-    print("getBooks");
     final response = await http.get(Uri.parse(_baseUrl));
 
     if (response.statusCode == 200) {
       var books = jsonDecode(response.body) as List;
       return books.map((book) => Book.fromJson(book)).toList();
-      // return Book.fromJson(
-      //     jsonDecode(response.body) as Map<String, dynamic>);
     } else {
       throw Exception('Failed to load books');
     }

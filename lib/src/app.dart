@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'handle_api/library_api.dart';
+import 'main/views.dart';
 import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
-
-import 'handle_api/library_api.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -45,7 +44,6 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: const [
             Locale('en', ''), // English, no country code
-            Locale('pl', ''), // Polish, no country code
           ],
 
           // Use AppLocalizations to configure the correct application title
@@ -63,8 +61,6 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
 
-
-
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
           onGenerateRoute: (RouteSettings routeSettings) {
@@ -76,9 +72,14 @@ class MyApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case SampleItemDetailsView.routeName:
                     return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
+                  case 'NewestBooksList':
                   default:
-                    return const SampleItemListView();
+                    return BooksListView(
+                      books: LibraryApi().getBooks(),
+                      title: 'Najnowsze książki',
+                      restorationId: 'NewestBooksList',
+                      onTapRouteName: SampleItemDetailsView.routeName,
+                    );
                 }
               },
             );
