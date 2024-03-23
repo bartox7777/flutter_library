@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 class LibraryApi {
   static const String _baseUrl =
       'https://libsys-api-b88eb4c3d18e.herokuapp.com/api';
+  // 'http://localhost:5000/api';
 
   Future<List<Book>> getBooks() async {
     final response = await http.get(Uri.parse(_baseUrl));
@@ -20,7 +21,7 @@ class LibraryApi {
 
 class Book {
   final String addDate;
-  final String authorId;
+  final Map<String, dynamic> author;
   final int bookId;
   final String category;
   final String cover;
@@ -34,7 +35,7 @@ class Book {
 
   Book(
       {required this.addDate,
-      required this.authorId,
+      required this.author,
       required this.bookId,
       required this.category,
       required this.cover,
@@ -50,7 +51,7 @@ class Book {
     return switch (json) {
       {
         'add_date': String addDate,
-        'author_id': String authorId,
+        'author': Map<String, dynamic> author,
         'book_id': int bookId,
         'category': String category,
         'cover': String cover,
@@ -64,7 +65,7 @@ class Book {
       } =>
         Book(
           addDate: addDate,
-          authorId: authorId,
+          author: author,
           bookId: bookId,
           category: category,
           cover: cover,

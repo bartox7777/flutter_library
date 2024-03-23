@@ -37,8 +37,18 @@ class BooksListView extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: ListTile(
-                      title: Text(item.title),
-                      subtitle: Text(item.publisher),
+                      title: RichText(
+                          text: TextSpan(
+                              text: item.title,
+                              style: DefaultTextStyle.of(context).style,
+                              children: <TextSpan>[
+                            TextSpan(
+                                text: ' (${item.year})',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey)),
+                          ])),
+                      subtitle: Text(item.author['full_name']),
                       // leading: CircleAvatar(
                       //   foregroundImage:
                       //       Image.memory(base64Decode(item.cover)).image,
@@ -50,10 +60,12 @@ class BooksListView extends StatelessWidget {
                         // Navigate to the details page. If the user leaves and returns to
                         // the app after it has been killed while running in the
                         // background, the navigation stack is restored.
-                        Navigator.restorablePushNamed(
+                        var nav = Navigator.restorablePushNamed(
                           context,
                           onTapRouteName,
+                          arguments: item.bookId,
                         );
+                        nav;
                       },
                     ),
                   ),
@@ -61,7 +73,7 @@ class BooksListView extends StatelessWidget {
               },
             );
           } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
+            return Text('${snapshot.error} \n ${snapshot.stackTrace}');
           }
 
           // By default, show a loading spinner.

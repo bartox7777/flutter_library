@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:libsys/src/main/book_details.dart';
 
 import 'handle_api/library_api.dart';
 import 'main/views.dart';
@@ -72,13 +73,15 @@ class MyApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case SampleItemDetailsView.routeName:
                     return const SampleItemDetailsView();
+                  case BookDetailsView.routeName:
+                    return const BookDetailsView();
                   case 'NewestBooksList':
                   default:
                     return BooksListView(
                       books: LibraryApi().getBooks(),
                       title: 'Najnowsze książki',
                       restorationId: 'NewestBooksList',
-                      onTapRouteName: SampleItemDetailsView.routeName,
+                      onTapRouteName: BookDetailsView.routeName,
                     );
                 }
               },
