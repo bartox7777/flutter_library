@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:libsys/src/forms/book_details_form.dart';
 
 /// Displays detailed information about a Book
 class BookDetailsView extends StatelessWidget {
@@ -8,15 +9,17 @@ class BookDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bookId = ModalRoute.of(context)!.settings.arguments;
+    // short if
+    Map<String, dynamic>? book =
+        ModalRoute.of(context)!.settings.arguments != null
+            ? ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>
+            : null;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book Details'),
+        title: const Text('Formularz książki'),
       ),
-      body: Center(
-        child: Text('${bookId}'),
-      ),
+      body: BookDetailsForm(book),
     );
   }
 }

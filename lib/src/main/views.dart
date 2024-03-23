@@ -49,10 +49,6 @@ class BooksListView extends StatelessWidget {
                                     color: Colors.grey)),
                           ])),
                       subtitle: Text(item.author['full_name']),
-                      // leading: CircleAvatar(
-                      //   foregroundImage:
-                      //       Image.memory(base64Decode(item.cover)).image,
-                      // ),
                       leading: Image(
                         image: Image.memory(base64Decode(item.cover)).image,
                       ),
@@ -60,12 +56,11 @@ class BooksListView extends StatelessWidget {
                         // Navigate to the details page. If the user leaves and returns to
                         // the app after it has been killed while running in the
                         // background, the navigation stack is restored.
-                        var nav = Navigator.restorablePushNamed(
+                        Navigator.restorablePushNamed(
                           context,
                           onTapRouteName,
-                          arguments: item.bookId,
+                          arguments: item.to_map(),
                         );
-                        nav;
                       },
                     ),
                   ),
@@ -77,7 +72,7 @@ class BooksListView extends StatelessWidget {
           }
 
           // By default, show a loading spinner.
-          return const CircularProgressIndicator();
+          return Center(child: const CircularProgressIndicator());
         },
       );
 
