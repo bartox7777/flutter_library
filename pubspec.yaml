@@ -17,6 +17,7 @@ dependencies:
   http: ^1.2.1
   image_field: ^0.0.9
 
+  flutter_gen: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

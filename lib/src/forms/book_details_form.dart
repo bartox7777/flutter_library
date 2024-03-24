@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:image_field/image_field.dart';
-import 'package:image_picker/image_picker.dart';
 
 class BookDetailsForm extends StatefulWidget {
   // const BookDetailsForm(Set<Map<String, dynamic>> set, {super.key, this.book});
@@ -15,7 +13,6 @@ class BookDetailsForm extends StatefulWidget {
 
   @override
   _BookDetailsFormState createState() {
-    print("bookdetailsformstate: $book, ");
     return _BookDetailsFormState(this.book);
   }
 }
@@ -37,7 +34,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           TextFormField(
             initialValue: book != null ? book!['isbn'] : '',
             decoration: const InputDecoration(
-              hintText: 'ISBN',
+              labelText: 'ISBN',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -47,10 +44,11 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
             },
           ),
           // title
+
           TextFormField(
             initialValue: book != null ? book!['title'] : '',
-            decoration: const InputDecoration(
-              hintText: 'Tytuł',
+            decoration: InputDecoration(
+              labelText: 'Tytuł',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -63,7 +61,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           TextFormField(
             initialValue: book != null ? book!['author']["author_id"] : '',
             decoration: const InputDecoration(
-              hintText: 'ID autora',
+              labelText: 'ID autora',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -76,7 +74,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           TextFormField(
             initialValue: book != null ? book!['category'] : '',
             decoration: const InputDecoration(
-              hintText: 'Kategoria',
+              labelText: 'Kategoria',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -89,7 +87,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           TextFormField(
             initialValue: book != null ? book!['year'] : '',
             decoration: const InputDecoration(
-              hintText: 'Rok wydania',
+              labelText: 'Rok wydania',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -102,7 +100,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           TextFormField(
             initialValue: book != null ? book!['pages'] : '',
             decoration: const InputDecoration(
-              hintText: 'Liczba stron',
+              labelText: 'Liczba stron',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -115,7 +113,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           TextFormField(
             initialValue: book != null ? book!['publisher'] : '',
             decoration: const InputDecoration(
-              hintText: 'Wydawca',
+              labelText: 'Wydawca',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -128,7 +126,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           TextFormField(
             initialValue: book != null ? book!['number_of_copies'] : '',
             decoration: const InputDecoration(
-              hintText: 'Liczba kopii',
+              labelText: 'Liczba kopii',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -138,21 +136,33 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
             },
           ),
           // cover - image input
-          ImageField(
-            files: book != null
-                ? [
-                    ImageAndCaptionModel(
-                        file: base64.decode(book!['cover']), caption: "")
-                  ]
-                : null,
-            multipleUpload: false,
-            enabledCaption: false,
+          Padding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // color gray
+                const Text('Okładka', style: TextStyle(color: Colors.black87)),
+                // space
+                const SizedBox(height: 5),
+                ImageField(
+                  files: book != null
+                      ? [
+                          ImageAndCaptionModel(
+                              file: base64.decode(book!['cover']), caption: "")
+                        ]
+                      : null,
+                  multipleUpload: false,
+                  enabledCaption: false,
+                ),
+              ],
+            ),
+            padding: EdgeInsetsDirectional.only(bottom: 20, top: 20),
           ),
           // description
           TextFormField(
             initialValue: book != null ? book!['description'] : '',
             decoration: const InputDecoration(
-              hintText: 'Opis',
+              labelText: 'Opis',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -160,8 +170,8 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
               }
               return null;
             },
-            minLines: 3,
-            maxLines: 5,
+            minLines: 1,
+            maxLines: 10,
           ),
           ElevatedButton(
             onPressed: () {

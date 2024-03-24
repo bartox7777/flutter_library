@@ -9,17 +9,11 @@ class BookDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // short if
     Map<String, dynamic>? book =
         ModalRoute.of(context)!.settings.arguments != null
             ? ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>
             : null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Formularz książki'),
-      ),
-      body: BookDetailsForm(book),
-    );
+    return BookDetailsForm(book);
   }
 }

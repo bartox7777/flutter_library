@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:libsys/src/main/book_details.dart';
+import 'package:libsys/src/main/book_details_view.dart';
 
 import 'handle_api/library_api.dart';
-import 'main/views.dart';
-import 'sample_feature/sample_item_details_view.dart';
+import 'main/book_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -34,27 +31,6 @@ class MyApp extends StatelessWidget {
           // background.
           restorationScopeId: 'app',
 
-          // Provide the generated AppLocalizations to the MaterialApp. This
-          // allows descendant Widgets to display the correct translations
-          // depending on the user's locale.
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', ''), // English, no country code
-          ],
-
-          // Use AppLocalizations to configure the correct application title
-          // depending on the user's locale.
-          //
-          // The appTitle is defined in .arb files found in the localization
-          // directory.
-          onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.appTitle,
-
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
@@ -65,25 +41,58 @@ class MyApp extends StatelessWidget {
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
           onGenerateRoute: (RouteSettings routeSettings) {
+            var view;
+            var title;
             return MaterialPageRoute<void>(
               settings: routeSettings,
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
+                    view = SettingsView(controller: settingsController);
+                    title = 'Ustawienia';
                   case BookDetailsView.routeName:
-                    return const BookDetailsView();
+                    view = const BookDetailsView();
+                    title = 'Formularz książki';
                   case 'NewestBooksList':
                   default:
-                    return BooksListView(
+                    view = BooksListView(
                       books: LibraryApi().getBooks(),
                       title: 'Najnowsze książki',
                       restorationId: 'NewestBooksList',
                       onTapRouteName: BookDetailsView.routeName,
                     );
+                    title = 'Najnowsze książki';
                 }
+                // return Container(
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(200.0),
+                //     child: view,
+                //   ),
+                //   color: Theme.of(context).scaffoldBackgroundColor,
+                // );
+                return Scaffold(
+                  appBar: AppBar(
+                    title: Text(title),
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () {
+                          // Navigate to the settings page. If the user leaves and returns
+                          // to the app after it has been killed while running in the
+                          // background, the navigation stack is restored.
+                          Navigator.restorablePushNamed(
+                              context, SettingsView.routeName);
+                        },
+                      ),
+                    ],
+                  ),
+                  body: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      child: view,
+                    ),
+                  ),
+                );
               },
             );
           },
