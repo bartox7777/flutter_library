@@ -31,7 +31,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
+      child: ListView(
         children: <Widget>[
           // isbn
           TextFormField(
@@ -160,6 +160,8 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
               }
               return null;
             },
+            minLines: 3,
+            maxLines: 5,
           ),
           ElevatedButton(
             onPressed: () {
