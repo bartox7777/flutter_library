@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_field/image_field.dart';
+import 'package:isbn/isbn.dart';
+import 'package:libsys/src/handle_api/library_api.dart';
+
+import '../common/book.dart';
 
 class BookDetailsForm extends StatefulWidget {
   // const BookDetailsForm(Set<Map<String, dynamic>> set, {super.key, this.book});
@@ -18,11 +22,43 @@ class BookDetailsForm extends StatefulWidget {
 }
 
 class _BookDetailsFormState extends State<BookDetailsForm> {
-  _BookDetailsFormState(this.book);
-
-  final Map<String, dynamic>? book;
-
   final _formKey = GlobalKey<FormState>();
+  late final Map<String, dynamic>? book;
+  late Map<String, TextEditingController> _textEditingController;
+
+  _BookDetailsFormState(this.book) {
+    if (book == null) {
+      book = {
+        'book_id': '',
+        'isbn': '',
+        'title': '',
+        'author': {'author_id': '', 'full_name': ''},
+        'category': '',
+        'year': '',
+        'pages': '',
+        'publisher': '',
+        'number_of_copies': '',
+        'cover': '',
+        'description': '',
+      };
+    }
+
+    _textEditingController = {
+      'isbn': TextEditingController(text: book!['isbn']),
+      'title': TextEditingController(text: book!['title']),
+      'author': TextEditingController(
+          text:
+              '${book!['author']['author_id']} ${book!['author']['full_name']}'),
+      'category': TextEditingController(text: book!['category']),
+      'year': TextEditingController(text: book!['year']),
+      'pages': TextEditingController(text: book!['pages']),
+      'publisher': TextEditingController(text: book!['publisher']),
+      'number_of_copies':
+          TextEditingController(text: book!['number_of_copies']),
+      'cover': TextEditingController(text: book!['cover']),
+      'description': TextEditingController(text: book!['description']),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +68,15 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
         children: <Widget>[
           // isbn
           TextFormField(
-            initialValue: book != null ? book!['isbn'] : '',
+            controller: _textEditingController['isbn'],
             decoration: const InputDecoration(
               labelText: 'ISBN',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'ISBN jest wymagany';
+              } else if (Isbn().notIsbn(value, strict: true)) {
+                return 'ISBN jest nieprawidłowy';
               }
               return null;
             },
@@ -46,7 +84,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           // title
 
           TextFormField(
-            initialValue: book != null ? book!['title'] : '',
+            controller: _textEditingController['title'],
             decoration: InputDecoration(
               labelText: 'Tytuł',
             ),
@@ -59,7 +97,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           ),
           // author
           TextFormField(
-            initialValue: book != null ? book!['author']["author_id"] : '',
+            controller: _textEditingController['author'],
             decoration: const InputDecoration(
               labelText: 'ID autora',
             ),
@@ -72,7 +110,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           ),
           // category
           TextFormField(
-            initialValue: book != null ? book!['category'] : '',
+            controller: _textEditingController['category'],
             decoration: const InputDecoration(
               labelText: 'Kategoria',
             ),
@@ -85,20 +123,24 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           ),
           // year
           TextFormField(
-            initialValue: book != null ? book!['year'] : '',
+            controller: _textEditingController['year'],
             decoration: const InputDecoration(
               labelText: 'Rok wydania',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Rok wydania jest wymagany';
+              } else if (int.tryParse(value) == null ||
+                  value.length != 4 ||
+                  int.parse(value) < 0) {
+                return 'Rok wydania musi być liczbą całkowitą dodatnią o długości 4 znaków';
               }
               return null;
             },
           ),
           // pages
           TextFormField(
-            initialValue: book != null ? book!['pages'] : '',
+            controller: _textEditingController['pages'],
             decoration: const InputDecoration(
               labelText: 'Liczba stron',
             ),
@@ -106,12 +148,15 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
               if (value == null || value.isEmpty) {
                 return 'Liczba stron jest wymagana';
               }
+              if (int.tryParse(value) == null || int.parse(value) < 0) {
+                return 'Liczba stron musi być liczbą całkowitą dodatnią';
+              }
               return null;
             },
           ),
           // publisher
           TextFormField(
-            initialValue: book != null ? book!['publisher'] : '',
+            controller: _textEditingController['publisher'],
             decoration: const InputDecoration(
               labelText: 'Wydawca',
             ),
@@ -124,13 +169,16 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           ),
           // number of copies
           TextFormField(
-            initialValue: book != null ? book!['number_of_copies'] : '',
+            controller: _textEditingController['number_of_copies'],
             decoration: const InputDecoration(
               labelText: 'Liczba kopii',
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Liczba kopii jest wymagana';
+              }
+              if (int.tryParse(value) == null || int.parse(value) < 0) {
+                return 'Liczba kopii musi być liczbą całkowitą dodatnią';
               }
               return null;
             },
@@ -141,18 +189,25 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // color gray
-                const Text('Okładka', style: TextStyle(color: Colors.black87)),
+                Text(
+                  'Okładka',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.secondary),
+                ),
                 // space
                 const SizedBox(height: 5),
                 ImageField(
-                  files: book != null
-                      ? [
-                          ImageAndCaptionModel(
-                              file: base64.decode(book!['cover']), caption: "")
-                        ]
-                      : null,
+                  onSave: (file) {
+                    _textEditingController['cover']!.text =
+                        base64.encode(file![0].file);
+                  },
+                  files: [
+                    ImageAndCaptionModel(
+                        file: base64.decode(book!['cover']), caption: "")
+                  ],
                   multipleUpload: false,
                   enabledCaption: false,
+                  cardinality: 1,
                 ),
               ],
             ),
@@ -160,7 +215,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           ),
           // description
           TextFormField(
-            initialValue: book != null ? book!['description'] : '',
+            controller: _textEditingController['description'],
             decoration: const InputDecoration(
               labelText: 'Opis',
             ),
@@ -173,12 +228,59 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
             minLines: 1,
             maxLines: 10,
           ),
+          // space
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Przetwarzanie danych')),
                 );
+
+                final book = Book(
+                  bookId: this.book!['book_id'],
+                  addDate: DateTime.now().toString(),
+                  isbn: _textEditingController['isbn']!.text,
+                  title: _textEditingController['title']!.text,
+                  author: {
+                    'author_id':
+                        _textEditingController['author']!.text.split(' ')[0],
+                    'full_name': _textEditingController['author']!
+                        .text
+                        .split(' ')
+                        .sublist(1)
+                        .join(' '),
+                  },
+                  category: _textEditingController['category']!.text,
+                  year: _textEditingController['year']!.text,
+                  pages: _textEditingController['pages']!.text,
+                  publisher: _textEditingController['publisher']!.text,
+                  numberOfCopies:
+                      _textEditingController['number_of_copies']!.text,
+                  cover: _textEditingController['cover']!.text,
+                  description: _textEditingController['description']!.text,
+                );
+
+                print(book.to_map());
+                LibraryApi().updateBook(book);
+                // handle future
+                // send data to the server
+                //   LibraryApi().updateBook(book).then((value) {
+                //     print(value.body);
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       const SnackBar(content: Text('Dane przetworzone')),
+                //     );
+                //   }).catchError((error, stackTrace) {
+                //     print(error);
+                //     print(stackTrace);
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       const SnackBar(content: Text('Błąd przetwarzania danych')),
+                //     );
+                //   });
+                // } else {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     const SnackBar(content: Text('Błąd danych')),
+                //   );
               }
             },
             child: const Text('Submit'),

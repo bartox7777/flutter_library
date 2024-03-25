@@ -19,4 +19,41 @@ class LibraryApi {
       throw Exception('Failed to load books');
     }
   }
+
+  Future<void> updateBook(Book book) async {
+    final queryParameters = {
+      'isbn': book.isbn,
+      'title': book.title,
+      'author_id': book.author['author_id'],
+      'category': book.category,
+      'year': book.year,
+      'pages': book.pages,
+      'publisher': book.publisher,
+      'number_of_copies': book.numberOfCopies,
+      'cover': book.cover,
+      'description': book.description,
+    };
+
+    final uri = Uri.https(
+      'libsys-api-b88eb4c3d18e.herokuapp.com',
+      '/api/edit-book/${book.bookId}',
+      queryParameters,
+    );
+
+    await http
+        .patch(uri, body: jsonEncode(queryParameters))
+        .then((value) => print('body: ${value.body}'))
+        .catchError((error, e) {
+      print(error);
+      print(e);
+    });
+
+    // return new Future.sync(() => http.patch(uri));
+    // return http.patch(uri);
+    // final response = await http.patch(uri);
+    //
+    // print(response.body);
+    //
+    // return response;
+  }
 }

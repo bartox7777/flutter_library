@@ -15,17 +15,11 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        // Glue the SettingsController to the theme selection DropdownButton.
-        //
-        // When a user selects a theme from the dropdown list, the
-        // SettingsController is updated, which rebuilds the MaterialApp.
-        child: DropdownButton<ThemeMode>(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text('Theme Mode'),
+        DropdownButton<ThemeMode>(
           // Read the selected themeMode from the controller
           value: controller.themeMode,
           // Call the updateThemeMode method any time the user selects a theme.
@@ -45,7 +39,7 @@ class SettingsView extends StatelessWidget {
             )
           ],
         ),
-      ),
+      ],
     );
   }
 }

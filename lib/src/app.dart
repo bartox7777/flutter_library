@@ -87,7 +87,8 @@ class MyApp extends StatelessWidget {
                     ],
                   ),
                   body: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding:
+                        const EdgeInsetsDirectional.only(start: 20, end: 20),
                     child: Container(
                       child: view,
                     ),
