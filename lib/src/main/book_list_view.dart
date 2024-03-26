@@ -60,6 +60,11 @@ class BooksListView extends StatelessWidget {
                           onTapRouteName,
                           arguments: item.to_map(),
                         );
+                        // Navigator.pushNamed(
+                        //   context,
+                        //   onTapRouteName,
+                        //   arguments: item.to_map(),
+                        // );
                       },
                     ),
                   ),

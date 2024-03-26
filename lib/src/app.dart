@@ -63,13 +63,7 @@ class MyApp extends StatelessWidget {
                     );
                     title = 'Najnowsze książki';
                 }
-                // return Container(
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(200.0),
-                //     child: view,
-                //   ),
-                //   color: Theme.of(context).scaffoldBackgroundColor,
-                // );
+
                 return Scaffold(
                   appBar: AppBar(
                     title: Text(title),

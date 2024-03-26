@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_field/image_field.dart';
 import 'package:isbn/isbn.dart';
 import 'package:libsys/src/handle_api/library_api.dart';
+import 'package:libsys/src/main/book_list_view.dart';
 
 import '../common/book.dart';
 
@@ -261,26 +263,12 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                   description: _textEditingController['description']!.text,
                 );
 
-                print(book.to_map());
-                LibraryApi().updateBook(book);
-                // handle future
-                // send data to the server
-                //   LibraryApi().updateBook(book).then((value) {
-                //     print(value.body);
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       const SnackBar(content: Text('Dane przetworzone')),
-                //     );
-                //   }).catchError((error, stackTrace) {
-                //     print(error);
-                //     print(stackTrace);
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       const SnackBar(content: Text('Błąd przetwarzania danych')),
-                //     );
-                //   });
-                // } else {
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     const SnackBar(content: Text('Błąd danych')),
-                //   );
+                LibraryApi().updateBook(book).then((value) => {null});
+                // Navigator.maybePop(context);
+                // Navigator.pushNamed(context, 'NewestBooksList');
+                // Navigator.pop(context);
+                Navigator.popUntil(context, (route) => true);
+                Navigator.pushReplacementNamed(context, 'NewestBooksList');
               }
             },
             child: const Text('Submit'),
