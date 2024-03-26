@@ -263,10 +263,33 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                   description: _textEditingController['description']!.text,
                 );
 
-                LibraryApi().updateBook(book).then((value) => {null});
-                // Navigator.maybePop(context);
-                // Navigator.pushNamed(context, 'NewestBooksList');
-                // Navigator.pop(context);
+                LibraryApi()
+                    .updateBook(book)
+                    .then((value) => {
+                          if (value.statusCode == 200)
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Zaktualizowano książkę')),
+                              ),
+                            }
+                          else
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Nie udało się zaktualizować książki')),
+                              ),
+                            }
+                        })
+                    .catchError((error, e) {
+                  print(error);
+                  print(e);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Nie udało się zaktualizować książki')),
+                  );
+                });
                 Navigator.popUntil(context, (route) => true);
                 Navigator.pushReplacementNamed(context, 'NewestBooksList');
               }
