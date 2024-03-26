@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_field/image_field.dart';
 import 'package:isbn/isbn.dart';
 import 'package:libsys/src/handle_api/library_api.dart';
-import 'package:libsys/src/main/book_list_view.dart';
 
 import '../common/book.dart';
 
@@ -233,7 +231,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           // space
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Przetwarzanie danych')),
@@ -263,7 +261,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                   description: _textEditingController['description']!.text,
                 );
 
-                LibraryApi()
+                await LibraryApi()
                     .updateBook(book)
                     .then((value) => {
                           if (value.statusCode == 200)
@@ -290,8 +288,8 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                         content: Text('Nie udało się zaktualizować książki')),
                   );
                 });
-                Navigator.popUntil(context, (route) => true);
-                Navigator.pushReplacementNamed(context, 'NewestBooksList');
+                Navigator.popUntil(context, (route) => false);
+                Navigator.pushNamed(context, Navigator.defaultRouteName);
               }
             },
             child: const Text('Submit'),

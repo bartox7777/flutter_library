@@ -1,19 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 
 import '../common/book.dart';
 
 class LibraryApi {
-  static const String _baseUrl =
+  Uri _baseUri =
       // 'http://127.0.0.1:5000/api';
-      'https://libsys-api-b88eb4c3d18e.herokuapp.com/api';
+      Uri.parse('https://libsys-api-b88eb4c3d18e.herokuapp.com/api');
 
   Future<List<Book>> getBooks() async {
-    final response = await http.get(Uri.parse(_baseUrl));
+    final response = await http.get(_baseUri);
 
     if (response.statusCode == 200) {
       var books = jsonDecode(response.body) as List;
@@ -38,8 +35,8 @@ class LibraryApi {
     };
 
     var resp = http.patch(
-      Uri.https('libsys-api-b88eb4c3d18e.herokuapp.com',
-          '/api/edit-book/${book.bookId}', queryParameters),
+      Uri.https(
+          _baseUri.authority, '/api/edit-book/${book.bookId}', queryParameters),
     );
 
     resp.then((value) => {print(value.body)}).catchError((error, e) {
