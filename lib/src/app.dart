@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:libsys/src/auth/login_view.dart';
 import 'package:libsys/src/main/book_details_view.dart';
 
 import 'handle_api/library_api.dart';
@@ -53,8 +54,7 @@ class MyApp extends StatelessWidget {
                   case BookDetailsView.routeName:
                     view = const BookDetailsView();
                     title = 'Formularz książki';
-                  case 'NewestBooksList':
-                  default:
+                  case BooksListView.routeName:
                     view = BooksListView(
                       books: LibraryApi().getBooks(),
                       title: 'Najnowsze książki',
@@ -62,6 +62,21 @@ class MyApp extends StatelessWidget {
                       onTapRouteName: BookDetailsView.routeName,
                     );
                     title = 'Najnowsze książki';
+                  default:
+                    view = LoginView();
+                    title = "Logowanie";
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text(title),
+                      ),
+                      body: Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                            start: 20, end: 20),
+                        child: Container(
+                          child: view,
+                        ),
+                      ),
+                    );
                 }
 
                 return Scaffold(
@@ -71,6 +86,7 @@ class MyApp extends StatelessWidget {
                       PopupMenuButton(
                         itemBuilder: (BuildContext context) {
                           return [
+                            // if view is instnace of loginview
                             PopupMenuItem(
                               child: ListTile(
                                 title: Text('Najnowsze książki'),
@@ -78,7 +94,7 @@ class MyApp extends StatelessWidget {
                                   Navigator.of(context)
                                       .popUntil((route) => false);
                                   Navigator.of(context)
-                                      .pushNamed("NewestBooksList");
+                                      .pushNamed(BooksListView.routeName);
                                 },
                               ),
                             ),

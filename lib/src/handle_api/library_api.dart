@@ -34,16 +34,15 @@ class LibraryApi {
       'description': book.description,
     };
 
-    var resp = http.patch(
+    return http.patch(
       Uri.https(
           _baseUri.authority, '/api/edit-book/${book.bookId}', queryParameters),
     );
+  }
 
-    resp.then((value) => {print(value.body)}).catchError((error, e) {
-      print(error);
-      print(e);
-    });
-
-    return resp;
+  Future<http.Response> login(Map<String, String> credentials) {
+    return http.post(
+      Uri.https(_baseUri.authority, '/api/login', credentials),
+    );
   }
 }

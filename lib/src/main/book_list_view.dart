@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../common/book.dart';
 
-/// Displays a list of SampleItems.
 class BooksListView extends StatelessWidget {
   const BooksListView({
     super.key,
@@ -13,6 +12,8 @@ class BooksListView extends StatelessWidget {
     required this.restorationId,
     required this.onTapRouteName,
   });
+
+  static const String routeName = '/books-list';
 
   final String title;
   final String restorationId;

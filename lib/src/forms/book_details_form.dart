@@ -6,6 +6,7 @@ import 'package:isbn/isbn.dart';
 import 'package:libsys/src/handle_api/library_api.dart';
 
 import '../common/book.dart';
+import '../main/book_list_view.dart';
 
 var json;
 
@@ -275,7 +276,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                   Navigator.popUntil(context, (route) => false);
                   Navigator.pushNamed(
                     context,
-                    Navigator.defaultRouteName,
+                    BooksListView.routeName,
                   );
                 }).catchError((error, e) {
                   print(error);
