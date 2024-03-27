@@ -19,6 +19,7 @@ dependencies:
 
   flutter_gen: any
   isbn: ^1.0.4
+  flash: ^3.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

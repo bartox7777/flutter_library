@@ -68,14 +68,35 @@ class MyApp extends StatelessWidget {
                   appBar: AppBar(
                     title: Text(title),
                     actions: [
-                      IconButton(
-                        icon: const Icon(Icons.settings),
-                        onPressed: () {
-                          // Navigate to the settings page. If the user leaves and returns
-                          // to the app after it has been killed while running in the
-                          // background, the navigation stack is restored.
-                          Navigator.restorablePushNamed(
-                              context, SettingsView.routeName);
+                      PopupMenuButton(
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              child: ListTile(
+                                title: Text('Najnowsze książki'),
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .popUntil((route) => false);
+                                  Navigator.of(context)
+                                      .pushNamed("NewestBooksList");
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
+                                title: Text('Ustawienia'),
+                                onTap: () {
+                                  if (ModalRoute.of(context)!.settings.name !=
+                                      SettingsView.routeName) {
+                                    Navigator.of(context).popAndPushNamed(
+                                        SettingsView.routeName);
+                                  } else {
+                                    return;
+                                  }
+                                },
+                              ),
+                            ),
+                          ];
                         },
                       ),
                     ],

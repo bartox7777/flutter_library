@@ -7,6 +7,8 @@ import 'package:libsys/src/handle_api/library_api.dart';
 
 import '../common/book.dart';
 
+var json;
+
 class BookDetailsForm extends StatefulWidget {
   // const BookDetailsForm(Set<Map<String, dynamic>> set, {super.key, this.book});
 
@@ -231,11 +233,11 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           // space
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () async {
+            onPressed: () {
               if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Przetwarzanie danych')),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Przetwarzanie danych')),
+                // );
 
                 final book = Book(
                   bookId: this.book!['book_id'],
@@ -261,35 +263,35 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                   description: _textEditingController['description']!.text,
                 );
 
-                await LibraryApi()
-                    .updateBook(book)
-                    .then((value) => {
-                          if (value.statusCode == 200)
-                            {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Zaktualizowano książkę')),
-                              ),
-                            }
-                          else
-                            {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Nie udało się zaktualizować książki')),
-                              ),
-                            }
-                        })
-                    .catchError((error, e) {
+                var resp = LibraryApi().updateBook(book);
+                resp.then((value) {
+                  for (var i in jsonDecode(value.body)['flashes']) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(i[1]),
+                      ),
+                    );
+                  }
+                  Navigator.popUntil(context, (route) => false);
+                  Navigator.pushNamed(
+                    context,
+                    Navigator.defaultRouteName,
+                  );
+                }).catchError((error, e) {
                   print(error);
                   print(e);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Nie udało się zaktualizować książki')),
+                    SnackBar(
+                      content: Text('Błąd podczas przetwarzania danych'),
+                    ),
                   );
                 });
-                Navigator.popUntil(context, (route) => false);
-                Navigator.pushNamed(context, Navigator.defaultRouteName);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Popraw błędy w formularzu'),
+                  ),
+                );
               }
             },
             child: const Text('Submit'),
