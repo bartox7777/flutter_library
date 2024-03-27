@@ -11,8 +11,6 @@ import '../main/book_list_view.dart';
 var json;
 
 class BookDetailsForm extends StatefulWidget {
-  // const BookDetailsForm(Set<Map<String, dynamic>> set, {super.key, this.book});
-
   final Map<String, dynamic>? book;
 
   // constructor
@@ -28,6 +26,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
   final _formKey = GlobalKey<FormState>();
   late final Map<String, dynamic>? book;
   late Map<String, TextEditingController> _textEditingController;
+  late FutureBuilder selectAuthorBuilder;
 
   _BookDetailsFormState(this.book) {
     if (book == null) {
@@ -49,9 +48,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
     _textEditingController = {
       'isbn': TextEditingController(text: book!['isbn']),
       'title': TextEditingController(text: book!['title']),
-      'author': TextEditingController(
-          text:
-              '${book!['author']['author_id']} ${book!['author']['full_name']}'),
+      'author': TextEditingController(text: book!['author']['author_id']),
       'category': TextEditingController(text: book!['category']),
       'year': TextEditingController(text: book!['year']),
       'pages': TextEditingController(text: book!['pages']),
@@ -61,10 +58,55 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
       'cover': TextEditingController(text: book!['cover']),
       'description': TextEditingController(text: book!['description']),
     };
+
+    selectAuthorBuilder = FutureBuilder<List<dynamic>>(
+      future: LibraryApi().getAuthors(),
+      builder: (context, snapshot) {
+        List<DropdownMenuItem> items = [];
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Pobieranie danych...");
+        }
+        if (snapshot.hasError) {
+          return const Text("Błąd podczas pobierania danych");
+        }
+        if (snapshot.hasData) {
+          items.clear();
+          items.add(
+            DropdownMenuItem(
+              value: book!['author']['author_id'],
+              child: Text(book!['author']['full_name']),
+            ),
+          );
+          for (var author in snapshot.data!) {
+            if (author[0] == int.parse(book!['author']['author_id'])) {
+              continue;
+            }
+            items.add(DropdownMenuItem(
+              value: author[0],
+              child: Text(author[1]),
+            ));
+          }
+        }
+        if (items.isEmpty) {
+          return const Text("Brak autorów");
+        }
+        return DropdownButtonFormField(
+          value: items[0].value,
+          items: items,
+          onChanged: (value) {
+            _textEditingController['author']!.text = value.toString();
+          },
+          decoration: const InputDecoration(
+            labelText: 'Autor',
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // fb.createElement();
     return Form(
       key: _formKey,
       child: ListView(
@@ -99,18 +141,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
             },
           ),
           // author
-          TextFormField(
-            controller: _textEditingController['author'],
-            decoration: const InputDecoration(
-              labelText: 'ID autora',
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Autor jest wymagany';
-              }
-              return null;
-            },
-          ),
+          selectAuthorBuilder,
           // category
           TextFormField(
             controller: _textEditingController['category'],
@@ -295,7 +326,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                 );
               }
             },
-            child: const Text('Submit'),
+            child: const Text("Zapisz"),
           ),
         ],
       ),

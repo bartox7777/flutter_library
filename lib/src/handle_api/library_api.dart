@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -44,5 +45,12 @@ class LibraryApi {
     return http.post(
       Uri.https(_baseUri.authority, '/api/login', credentials),
     );
+  }
+
+  Future<List<dynamic>> getAuthors() async {
+    var resp = await http.get(
+      Uri.https(_baseUri.authority, '/api/add-book'),
+    );
+    return jsonDecode(resp.body)['authors'];
   }
 }
