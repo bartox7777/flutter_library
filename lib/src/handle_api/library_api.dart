@@ -11,7 +11,8 @@ class LibraryApi {
       Uri.parse('https://libsys-api-b88eb4c3d18e.herokuapp.com/api');
 
   Future<List<Book>> getBooks() async {
-    final response = await http.get(_baseUri);
+    final response =
+        await http.get(Uri.https(_baseUri.authority, "/api/search"));
 
     if (response.statusCode == 200) {
       var books = jsonDecode(response.body) as List;
@@ -19,6 +20,12 @@ class LibraryApi {
     } else {
       throw Exception('Failed to load books');
     }
+  }
+
+  Future<http.Response> getBookByIsbn(String isbn) async {
+    return http.post(
+      Uri.https(_baseUri.authority, '/api/add-book', {'isbn': isbn}),
+    );
   }
 
   Future<http.Response> updateBook(Book book) {
@@ -38,6 +45,29 @@ class LibraryApi {
     return http.patch(
       Uri.https(
           _baseUri.authority, '/api/edit-book/${book.bookId}', queryParameters),
+    );
+  }
+
+  Future<http.Response> addBook(Book book) {
+    var queryParameters = {
+      'isbn': book.isbn,
+      'title': book.title,
+      'author': book.author['author_id'],
+      'category': book.category,
+      'year': book.year,
+      'pages': book.pages,
+      'publisher': book.publisher,
+      'number_of_copies': book.numberOfCopies,
+      'cover': book.cover,
+      'description': book.description,
+    };
+
+    if (book.author['author_id'] == '-1') {
+      queryParameters['add_author'] = book.author['full_name'];
+    }
+
+    return http.put(
+      Uri.https(_baseUri.authority, '/api/add-book', queryParameters),
     );
   }
 

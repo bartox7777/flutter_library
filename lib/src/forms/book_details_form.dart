@@ -7,6 +7,7 @@ import 'package:libsys/src/handle_api/library_api.dart';
 
 import '../common/book.dart';
 import '../main/book_list_view.dart';
+import '../moderate/update_book_func.dart';
 
 var json;
 
@@ -24,17 +25,17 @@ class BookDetailsForm extends StatefulWidget {
 
 class _BookDetailsFormState extends State<BookDetailsForm> {
   final _formKey = GlobalKey<FormState>();
-  late final Map<String, dynamic>? book;
+  late Map<String, dynamic>? book;
   late Map<String, TextEditingController> _textEditingController;
   late FutureBuilder selectAuthorBuilder;
 
   _BookDetailsFormState(this.book) {
-    if (book == null) {
-      book = {
+    if (this.book == null) {
+      this.book = {
         'book_id': '',
         'isbn': '',
         'title': '',
-        'author': {'author_id': '', 'full_name': ''},
+        'author': {'author_id': '-1', 'full_name': ''},
         'category': '',
         'year': '',
         'pages': '',
@@ -46,17 +47,17 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
     }
 
     _textEditingController = {
-      'isbn': TextEditingController(text: book!['isbn']),
-      'title': TextEditingController(text: book!['title']),
-      'author': TextEditingController(text: book!['author']['author_id']),
-      'category': TextEditingController(text: book!['category']),
-      'year': TextEditingController(text: book!['year']),
-      'pages': TextEditingController(text: book!['pages']),
-      'publisher': TextEditingController(text: book!['publisher']),
+      'isbn': TextEditingController(text: this.book!['isbn']),
+      'title': TextEditingController(text: this.book!['title']),
+      'author': TextEditingController(text: this.book!['author']['author_id']),
+      'category': TextEditingController(text: this.book!['category']),
+      'year': TextEditingController(text: this.book!['year']),
+      'pages': TextEditingController(text: this.book!['pages']),
+      'publisher': TextEditingController(text: this.book!['publisher']),
       'number_of_copies':
-          TextEditingController(text: book!['number_of_copies']),
-      'cover': TextEditingController(text: book!['cover']),
-      'description': TextEditingController(text: book!['description']),
+          TextEditingController(text: this.book!['number_of_copies']),
+      'cover': TextEditingController(text: this.book!['cover']),
+      'description': TextEditingController(text: this.book!['description']),
     };
 
     selectAuthorBuilder = FutureBuilder<List<dynamic>>(
@@ -235,10 +236,12 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                     _textEditingController['cover']!.text =
                         base64.encode(file![0].file);
                   },
-                  files: [
-                    ImageAndCaptionModel(
-                        file: base64.decode(book!['cover']), caption: "")
-                  ],
+                  files: book!['cover'] != ''
+                      ? [
+                          ImageAndCaptionModel(
+                              file: base64.decode(book!['cover']), caption: "")
+                        ]
+                      : [],
                   multipleUpload: false,
                   enabledCaption: false,
                   cardinality: 1,
@@ -265,67 +268,8 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           // space
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(content: Text('Przetwarzanie danych')),
-                // );
-
-                final book = Book(
-                  bookId: this.book!['book_id'],
-                  addDate: DateTime.now().toString(),
-                  isbn: _textEditingController['isbn']!.text,
-                  title: _textEditingController['title']!.text,
-                  author: {
-                    'author_id':
-                        _textEditingController['author']!.text.split(' ')[0],
-                    'full_name': _textEditingController['author']!
-                        .text
-                        .split(' ')
-                        .sublist(1)
-                        .join(' '),
-                  },
-                  category: _textEditingController['category']!.text,
-                  year: _textEditingController['year']!.text,
-                  pages: _textEditingController['pages']!.text,
-                  publisher: _textEditingController['publisher']!.text,
-                  numberOfCopies:
-                      _textEditingController['number_of_copies']!.text,
-                  cover: _textEditingController['cover']!.text,
-                  description: _textEditingController['description']!.text,
-                );
-
-                var resp = LibraryApi().updateBook(book);
-                resp.then((value) {
-                  for (var i in jsonDecode(value.body)['flashes']) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(i[1]),
-                      ),
-                    );
-                  }
-                  Navigator.popUntil(context, (route) => false);
-                  Navigator.pushNamed(
-                    context,
-                    BooksListView.routeName,
-                  );
-                }).catchError((error, e) {
-                  print(error);
-                  print(e);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Błąd podczas przetwarzania danych'),
-                    ),
-                  );
-                });
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Popraw błędy w formularzu'),
-                  ),
-                );
-              }
-            },
+            onPressed:
+                updateBook(context, _formKey, _textEditingController, book!),
             child: const Text("Zapisz"),
           ),
         ],

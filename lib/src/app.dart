@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:libsys/src/auth/login_view.dart';
 import 'package:libsys/src/main/book_details_view.dart';
+import 'package:libsys/src/main/isbn_info_view.dart';
 
 import 'handle_api/library_api.dart';
 import 'main/book_list_view.dart';
+import 'main/light_sensor_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -54,14 +56,20 @@ class MyApp extends StatelessWidget {
                   case BookDetailsView.routeName:
                     view = const BookDetailsView();
                     title = 'Formularz książki';
+                  case LightSensorView.routeName:
+                    view = const LightSensorView();
+                    title = 'Sprawdź jasność otoczenia';
+                  case IsbnInfoView.routeName:
+                    view = const IsbnInfoView();
+                    title = 'Skanowanie ISBN';
                   case BooksListView.routeName:
                     view = BooksListView(
                       books: LibraryApi().getBooks(),
-                      title: 'Najnowsze książki',
+                      title: 'Wszystkie książki',
                       restorationId: 'NewestBooksList',
                       onTapRouteName: BookDetailsView.routeName,
                     );
-                    title = 'Najnowsze książki';
+                    title = 'Wszystkie książki';
                   default:
                     view = LoginView();
                     title = "Logowanie";
@@ -89,12 +97,30 @@ class MyApp extends StatelessWidget {
                             // if view is instnace of loginview
                             PopupMenuItem(
                               child: ListTile(
-                                title: Text('Najnowsze książki'),
+                                title: Text('Wszystkie książki'),
                                 onTap: () {
                                   Navigator.of(context)
                                       .popUntil((route) => false);
                                   Navigator.of(context)
                                       .pushNamed(BooksListView.routeName);
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
+                                title: Text('Sprawdź jasność'),
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed(LightSensorView.routeName);
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
+                                title: Text('Skanowanie ISBN'),
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed(IsbnInfoView.routeName);
                                 },
                               ),
                             ),
