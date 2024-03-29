@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:libsys/src/moderate/update_book_func.dart';
 
 import '../common/book.dart';
 
@@ -59,7 +60,11 @@ class BooksListView extends StatelessWidget {
                         Navigator.restorablePushNamed(
                           context,
                           onTapRouteName,
-                          arguments: item.to_map(),
+                          // provide multiple arguments
+                          arguments: {
+                            'book_map': item.to_map(),
+                            'on_submit_action': "updateBook",
+                          },
                         );
                       },
                     ),

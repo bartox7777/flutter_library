@@ -71,20 +71,27 @@ class MyApp extends StatelessWidget {
                     );
                     title = 'Wszystkie książki';
                   default:
-                    view = LoginView();
-                    title = "Logowanie";
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: Text(title),
-                      ),
-                      body: Padding(
-                        padding: const EdgeInsetsDirectional.only(
-                            start: 20, end: 20),
-                        child: Container(
-                          child: view,
-                        ),
-                      ),
+                    view = BooksListView(
+                      books: LibraryApi().getBooks(),
+                      title: 'Wszystkie książki',
+                      restorationId: 'NewestBooksList',
+                      onTapRouteName: BookDetailsView.routeName,
                     );
+                    title = 'Wszystkie książki';
+                  // view = LoginView();
+                  // title = "Logowanie";
+                  // return Scaffold(
+                  //   appBar: AppBar(
+                  //     title: Text(title),
+                  //   ),
+                  //   body: Padding(
+                  //     padding: const EdgeInsetsDirectional.only(
+                  //         start: 20, end: 20),
+                  //     child: Container(
+                  //       child: view,
+                  //     ),
+                  //   ),
+                  // );
                 }
 
                 return Scaffold(

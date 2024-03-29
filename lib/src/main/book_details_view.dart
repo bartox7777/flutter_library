@@ -9,11 +9,20 @@ class BookDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic>? book =
-        ModalRoute.of(context)!.settings.arguments != null
-            ? ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>
-            : null;
-
-    return BookDetailsForm(book);
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      try {
+        var arg =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        var book_map = arg["book_map"] as Map<String, dynamic>;
+        var on_submit_action = arg["on_submit_action"] as String;
+        return BookDetailsForm(book_map, on_submit_action);
+      } catch (e) {
+        print(
+          "Map<String, dynamic> book_map or Function(BuildContext, GlobalKey<FormState>, Map<String, TextEditingController>, Map<String, dynamic>?) on_submit was not passed.",
+        );
+        print(e);
+      }
+    }
+    return BookDetailsForm(null, null);
   }
 }

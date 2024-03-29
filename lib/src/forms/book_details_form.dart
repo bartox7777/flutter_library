@@ -13,13 +13,14 @@ var json;
 
 class BookDetailsForm extends StatefulWidget {
   final Map<String, dynamic>? book;
+  final String? on_submit_action;
 
   // constructor
-  BookDetailsForm(this.book);
+  BookDetailsForm(this.book, this.on_submit_action);
 
   @override
   _BookDetailsFormState createState() {
-    return _BookDetailsFormState(this.book);
+    return _BookDetailsFormState(this.book, this.on_submit_action);
   }
 }
 
@@ -28,8 +29,9 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
   late Map<String, dynamic>? book;
   late Map<String, TextEditingController> _textEditingController;
   late FutureBuilder selectAuthorBuilder;
+  late String? on_submit_action;
 
-  _BookDetailsFormState(this.book) {
+  _BookDetailsFormState(this.book, this.on_submit_action) {
     if (this.book == null) {
       this.book = {
         'book_id': '',
@@ -267,11 +269,12 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           ),
           // space
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed:
-                updateBook(context, _formKey, _textEditingController, book!),
-            child: const Text("Zapisz"),
-          ),
+          if (on_submit_action == 'updateBook')
+            ElevatedButton(
+              onPressed:
+                  updateBook(context, _formKey, _textEditingController, book),
+              child: const Text('Zapisz zmiany'),
+            ),
         ],
       ),
     );
