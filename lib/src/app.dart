@@ -115,6 +115,38 @@ class MyApp extends StatelessWidget {
                             ),
                             PopupMenuItem(
                               child: ListTile(
+                                title: Text('Dodaj książkę'),
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .popUntil((route) => false);
+                                  Navigator.of(context).pushNamed(
+                                    BookDetailsView.routeName,
+                                    arguments: {
+                                      'book_map': {
+                                        'isbn': '',
+                                        'title': '',
+                                        'author': {
+                                          'author_id': '-1',
+                                          'full_name': ''
+                                        },
+                                        'category': '',
+                                        'year': '',
+                                        'pages': '',
+                                        'publisher': '',
+                                        'number_of_copies': '',
+                                        'cover': '',
+                                        'description': '',
+                                        'add_date': '',
+                                        'book_id': '-1'
+                                      },
+                                      'on_submit_action': 'addBook',
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
                                 title: Text('Sprawdź jasność'),
                                 onTap: () {
                                   Navigator.of(context)

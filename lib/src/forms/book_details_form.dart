@@ -143,7 +143,20 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
             },
           ),
           // author
-          selectAuthorBuilder,
+          on_submit_action == "addBook"
+              ? TextFormField(
+                  controller: _textEditingController['author_name'],
+                  decoration: const InputDecoration(
+                    labelText: 'Autor',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Autor jest wymagana';
+                    }
+                    return null;
+                  },
+                )
+              : selectAuthorBuilder,
           // category
           TextFormField(
             controller: _textEditingController['category'],
