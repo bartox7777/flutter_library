@@ -6,26 +6,23 @@ import '../common/book.dart';
 import '../handle_api/library_api.dart';
 import '../main/book_list_view.dart';
 
-void Function() updateBook(
+void Function() processForm(
   BuildContext context,
   GlobalKey<FormState> _formKey,
   Map<String, TextEditingController> _textEditingController,
-  Map<String, dynamic>? _book,
+  int book_id,
+  Function(Book) process_form,
 ) {
   return () {
     if (_formKey.currentState!.validate()) {
       final book = Book(
-        bookId: _book!['book_id'],
+        bookId: book_id.toString(),
         addDate: DateTime.now().toString(),
         isbn: _textEditingController['isbn']!.text,
         title: _textEditingController['title']!.text,
         author: {
-          'author_id': _textEditingController['author']!.text.split(' ')[0],
-          'full_name': _textEditingController['author']!
-              .text
-              .split(' ')
-              .sublist(1)
-              .join(' '),
+          'author_id': _textEditingController['author']!.text,
+          'full_name': _textEditingController['author_name']!.text,
         },
         category: _textEditingController['category']!.text,
         year: _textEditingController['year']!.text,
@@ -36,9 +33,8 @@ void Function() updateBook(
         description: _textEditingController['description']!.text,
       );
 
-      var resp = LibraryApi().updateBook(book);
+      var resp = process_form(book);
       resp.then((value) {
-        print(value.body);
         for (var i in jsonDecode(value.body)['flashes']) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_field/image_field.dart';
 import 'package:isbn/isbn.dart';
 import 'package:libsys/src/handle_api/library_api.dart';
-
-import '../common/book.dart';
-import '../main/book_list_view.dart';
-import '../moderate/update_book_func.dart';
+import 'package:libsys/src/moderate/process_book_details_form.dart';
 
 var json;
 
@@ -52,6 +49,8 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
       'isbn': TextEditingController(text: this.book!['isbn']),
       'title': TextEditingController(text: this.book!['title']),
       'author': TextEditingController(text: this.book!['author']['author_id']),
+      'author_name':
+          TextEditingController(text: this.book!['author']['full_name']),
       'category': TextEditingController(text: this.book!['category']),
       'year': TextEditingController(text: this.book!['year']),
       'pages': TextEditingController(text: this.book!['pages']),
@@ -271,9 +270,25 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           const SizedBox(height: 20),
           if (on_submit_action == 'updateBook')
             ElevatedButton(
-              onPressed:
-                  updateBook(context, _formKey, _textEditingController, book),
+              onPressed: processForm(
+                context,
+                _formKey,
+                _textEditingController,
+                int.parse(book!['book_id']),
+                LibraryApi().updateBook,
+              ),
               child: const Text('Zapisz zmiany'),
+            ),
+          if (on_submit_action == 'addBook')
+            ElevatedButton(
+              onPressed: processForm(
+                context,
+                _formKey,
+                _textEditingController,
+                -1,
+                LibraryApi().addBook,
+              ),
+              child: const Text('Dodaj książkę'),
             ),
         ],
       ),

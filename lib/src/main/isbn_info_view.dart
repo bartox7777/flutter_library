@@ -25,32 +25,37 @@ class _IsbnInfoState extends State<IsbnInfoView> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                var res = await Navigator.push(
+                var isbn = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const SimpleBarcodeScannerPage(),
                     ));
-                var resp = await LibraryApi().getBookByIsbn(res);
+                var resp = await LibraryApi().getBookByIsbn(isbn);
                 var respJson = jsonDecode(resp.body);
                 Navigator.of(context).popUntil((route) => false);
-                Navigator.of(context)
-                    .pushNamed(BookDetailsView.routeName, arguments: {
-                  'isbn': res,
-                  'title': respJson['title'] ?? '',
-                  'author': {
-                    'author_id': '-1',
-                    'full_name': respJson['author'] ?? ''
+                Navigator.of(context).pushNamed(
+                  BookDetailsView.routeName,
+                  arguments: {
+                    'book_map': {
+                      'isbn': isbn,
+                      'title': respJson['title'] ?? '',
+                      'author': {
+                        'author_id': '-1',
+                        'full_name': respJson['author'] ?? ''
+                      },
+                      'category': '',
+                      'year': respJson['year'] ?? '',
+                      'pages': '',
+                      'publisher': respJson['publisher'] ?? '',
+                      'number_of_copies': '',
+                      'cover': '',
+                      'description': respJson['description'] ?? '',
+                      'add_date': '',
+                      'book_id': '-1'
+                    },
+                    'on_submit_action': 'addBook',
                   },
-                  'category': '',
-                  'year': respJson['year'] ?? '',
-                  'pages': '',
-                  'publisher': respJson['publisher'] ?? '',
-                  'number_of_copies': '',
-                  'cover': '',
-                  'description': respJson['description'] ?? '',
-                  'add_date': '',
-                  'book_id': ''
-                });
+                );
               },
               child: const Text('Otwórz skaner kodów kreskowych ISBN'),
             ),
