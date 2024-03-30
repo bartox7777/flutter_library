@@ -18,10 +18,11 @@ class BooksListView extends StatelessWidget {
   final String title;
   final String restorationId;
   final String onTapRouteName;
-  final Future<List<Book>> books;
+  final Function({String phrase}) books;
 
-  FutureBuilder<List<Book>> get futureBuilder => FutureBuilder<List<Book>>(
-        future: books,
+  FutureBuilder<List<Book>> futureBuilder(String phrase) =>
+      FutureBuilder<List<Book>>(
+        future: books(phrase: phrase),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -82,6 +83,12 @@ class BooksListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return futureBuilder;
+    final phrase = ModalRoute.of(context)!.settings.arguments is String
+        ? ModalRoute.of(context)!.settings.arguments as String
+        : "";
+    if (phrase == '') {
+      print('phrase is empty or not a string');
+    }
+    return futureBuilder(phrase);
   }
 }

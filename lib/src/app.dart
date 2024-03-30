@@ -6,6 +6,7 @@ import 'package:libsys/src/main/isbn_info_view.dart';
 import 'handle_api/library_api.dart';
 import 'main/book_list_view.dart';
 import 'main/light_sensor_view.dart';
+import 'main/nfc_read.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -58,40 +59,36 @@ class MyApp extends StatelessWidget {
                     title = 'Formularz książki';
                   case LightSensorView.routeName:
                     view = const LightSensorView();
-                    title = 'Sprawdź jasność otoczenia';
+                    title = 'Jasność otoczenia';
                   case IsbnInfoView.routeName:
                     view = const IsbnInfoView();
                     title = 'Skanowanie ISBN';
+                  case NfcReadView.routeName:
+                    view = NfcReadView();
+                    title = 'Odczytaj przez NFC';
                   case BooksListView.routeName:
                     view = BooksListView(
-                      books: LibraryApi().getBooks(),
-                      title: 'Wszystkie książki',
+                      books: LibraryApi().getBooks,
+                      title: 'Lista książek',
                       restorationId: 'NewestBooksList',
                       onTapRouteName: BookDetailsView.routeName,
                     );
-                    title = 'Wszystkie książki';
+                    title = 'Lista książek';
                   default:
-                    view = BooksListView(
-                      books: LibraryApi().getBooks(),
-                      title: 'Wszystkie książki',
-                      restorationId: 'NewestBooksList',
-                      onTapRouteName: BookDetailsView.routeName,
+                    view = LoginView();
+                    title = "Logowanie";
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text(title),
+                      ),
+                      body: Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                            start: 20, end: 20),
+                        child: Container(
+                          child: view,
+                        ),
+                      ),
                     );
-                    title = 'Wszystkie książki';
-                  // view = LoginView();
-                  // title = "Logowanie";
-                  // return Scaffold(
-                  //   appBar: AppBar(
-                  //     title: Text(title),
-                  //   ),
-                  //   body: Padding(
-                  //     padding: const EdgeInsetsDirectional.only(
-                  //         start: 20, end: 20),
-                  //     child: Container(
-                  //       child: view,
-                  //     ),
-                  //   ),
-                  // );
                 }
 
                 return Scaffold(
@@ -160,6 +157,15 @@ class MyApp extends StatelessWidget {
                                 onTap: () {
                                   Navigator.of(context)
                                       .pushNamed(IsbnInfoView.routeName);
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
+                                title: Text('Wyszukaj przez NFC'),
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed(NfcReadView.routeName);
                                 },
                               ),
                             ),

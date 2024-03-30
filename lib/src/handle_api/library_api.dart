@@ -10,9 +10,9 @@ class LibraryApi {
       // 'http://127.0.0.1:5000/api';
       Uri.parse('https://libsys-api-b88eb4c3d18e.herokuapp.com/api');
 
-  Future<List<Book>> getBooks() async {
-    final response =
-        await http.get(Uri.https(_baseUri.authority, "/api/search"));
+  Future<List<Book>> getBooks({String phrase = ""}) async {
+    final response = await http
+        .get(Uri.https(_baseUri.authority, "/api/search", {"phrase": phrase}));
 
     if (response.statusCode == 200) {
       var books = jsonDecode(response.body) as List;
