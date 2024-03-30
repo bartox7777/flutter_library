@@ -6,6 +6,8 @@ import 'package:isbn/isbn.dart';
 import 'package:libsys/src/handle_api/library_api.dart';
 import 'package:libsys/src/moderate/process_book_details_form.dart';
 
+import '../moderate/borrow_book_view.dart';
+
 var json;
 
 class BookDetailsForm extends StatefulWidget {
@@ -283,15 +285,22 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
           const SizedBox(height: 20),
           if (on_submit_action == 'updateBook')
             ElevatedButton(
-              onPressed: processForm(
-                context,
-                _formKey,
-                _textEditingController,
-                int.parse(book!['book_id']),
-                LibraryApi().updateBook,
-              ),
-              child: const Text('Zapisz zmiany'),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(BorrowBookView.routeName, arguments: book!);
+              },
+              child: const Text('Wypożycz książkę'),
             ),
+          ElevatedButton(
+            onPressed: processForm(
+              context,
+              _formKey,
+              _textEditingController,
+              int.parse(book!['book_id']),
+              LibraryApi().updateBook,
+            ),
+            child: const Text('Zapisz zmiany'),
+          ),
           if (on_submit_action == 'addBook')
             ElevatedButton(
               onPressed: processForm(
@@ -303,6 +312,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
               ),
               child: const Text('Dodaj książkę'),
             ),
+          const SizedBox(height: 40),
         ],
       ),
     );

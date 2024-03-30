@@ -7,6 +7,7 @@ import 'handle_api/library_api.dart';
 import 'main/book_list_view.dart';
 import 'main/light_sensor_view.dart';
 import 'main/nfc_read.dart';
+import 'moderate/borrow_book_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -66,6 +67,9 @@ class MyApp extends StatelessWidget {
                   case NfcReadView.routeName:
                     view = NfcReadView();
                     title = 'Odczytaj przez NFC';
+                  case BorrowBookView.routeName:
+                    view = BorrowBookView();
+                    title = 'Wypożycz książkę';
                   case BooksListView.routeName:
                     view = BooksListView(
                       books: LibraryApi().getBooks,

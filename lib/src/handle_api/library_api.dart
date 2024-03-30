@@ -83,4 +83,11 @@ class LibraryApi {
     );
     return jsonDecode(resp.body)['authors'];
   }
+
+  Future<List<dynamic>> getUsers() async {
+    var resp = await http.get(
+      Uri.https(_baseUri.authority, '/api/list-users'),
+    );
+    return jsonDecode(resp.body)['users'];
+  }
 }
