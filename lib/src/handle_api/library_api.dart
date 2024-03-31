@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../common/book.dart';
@@ -89,5 +90,27 @@ class LibraryApi {
       Uri.https(_baseUri.authority, '/api/list-users'),
     );
     return jsonDecode(resp.body)['users'];
+  }
+
+  Future<Widget> getBorrowsCount(Book book) async {
+    final response = await http.get(
+      Uri.https(_baseUri.authority, '/api/list-borrows-users',
+          {'book_id': book.bookId}),
+    );
+
+    int borrowCounter = 0;
+    for (var borrow in jsonDecode(response.body)['borrows']) {
+      if (borrow['return_date'] == null) {
+        borrowCounter++;
+      }
+    }
+
+    if (response.statusCode == 200) {
+      return Text(
+        '${int.parse(book.numberOfCopies) - borrowCounter}/${book.numberOfCopies}',
+      );
+    } else {
+      throw Exception('Failed to load borrows count');
+    }
   }
 }

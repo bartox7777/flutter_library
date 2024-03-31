@@ -79,20 +79,27 @@ class MyApp extends StatelessWidget {
                     );
                     title = 'Lista książek';
                   default:
-                    view = LoginView();
-                    title = "Logowanie";
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: Text(title),
-                      ),
-                      body: Padding(
-                        padding: const EdgeInsetsDirectional.only(
-                            start: 20, end: 20),
-                        child: Container(
-                          child: view,
-                        ),
-                      ),
+                    // view = LoginView();
+                    // title = "Logowanie";
+                    // return Scaffold(
+                    //   appBar: AppBar(
+                    //     title: Text(title),
+                    //   ),
+                    //   body: Padding(
+                    //     padding: const EdgeInsetsDirectional.only(
+                    //         start: 20, end: 20),
+                    //     child: Container(
+                    //       child: view,
+                    //     ),
+                    //   ),
+                    // );
+                    view = BooksListView(
+                      books: LibraryApi().getBooks,
+                      title: 'Lista książek',
+                      restorationId: 'NewestBooksList',
+                      onTapRouteName: BookDetailsView.routeName,
                     );
+                    title = 'Lista książek';
                 }
 
                 return Scaffold(

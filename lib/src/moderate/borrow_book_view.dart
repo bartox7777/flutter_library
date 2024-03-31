@@ -61,16 +61,20 @@ class BorrowBookView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: ListTile(
                     title: RichText(
-                        text: TextSpan(
-                            text: book_map['title'],
-                            style: DefaultTextStyle.of(context).style,
-                            children: <TextSpan>[
+                      text: TextSpan(
+                        text: book_map['title'],
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
                           TextSpan(
-                              text: ' (${book_map['year']})',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey)),
-                        ])),
+                            text: ' (${book_map['year']})',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     subtitle: Text(book_map['author']['full_name']),
                     leading: Image(
                       image:
@@ -82,9 +86,7 @@ class BorrowBookView extends StatelessWidget {
               selectUserBuilder,
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  print('Przetwarzanie wypożyczenia...');
-                },
+                onPressed: () {},
                 child: const Text('Wypożycz'),
                 // full width button
                 style: ElevatedButton.styleFrom(
