@@ -39,7 +39,7 @@ class AllBookBorrowsView extends StatelessWidget {
                       "Wypożyczono: ${borrow['predicted_return_date'].split(' ')[1]} ${borrow['predicted_return_date'].split(' ')[2]} ${borrow['predicted_return_date'].split(' ')[3]}",
                     ),
                     trailing: Text(
-                      "Zwrcono: ${borrow['return_date'] == null ? 'Nie' : 'Tak'}",
+                      "Zwrócono: ${borrow['return_date'] == null ? 'Nie' : 'Tak'}",
                     ),
                   ),
                 ),
