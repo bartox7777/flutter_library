@@ -125,4 +125,18 @@ class LibraryApi {
       ),
     );
   }
+
+  Future<List<dynamic>> getBookBorrows(int bookId) async {
+    var resp = await http.get(
+      Uri.https(
+        _baseUri.authority,
+        '/api/list-borrows-users',
+        {
+          'book_id': bookId.toString(),
+        },
+      ),
+    );
+    print(jsonDecode(resp.body)['borrows']);
+    return jsonDecode(resp.body)['borrows'];
+  }
 }

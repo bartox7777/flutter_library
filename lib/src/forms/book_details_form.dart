@@ -6,6 +6,7 @@ import 'package:isbn/isbn.dart';
 import 'package:libsys/src/handle_api/library_api.dart';
 import 'package:libsys/src/moderate/process_book_details_form.dart';
 
+import '../moderate/all_book_borrows_view.dart';
 import '../moderate/borrow_book_view.dart';
 
 var json;
@@ -291,6 +292,13 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
               },
               child: const Text('Wypożycz książkę'),
             ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed(AllBookBorrowsView.routeName, arguments: book!);
+            },
+            child: const Text('Wszystkie wypożyczenia'),
+          ),
           ElevatedButton(
             onPressed: processForm(
               context,
