@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:libsys/src/common/book_card.dart';
 
 import '../common/book.dart';
 import '../handle_api/library_api.dart';
@@ -46,43 +47,7 @@ class BooksListView extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final item = snapshot.data![index];
 
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ListTile(
-                      title: RichText(
-                        text: TextSpan(
-                          text: item.title,
-                          style: DefaultTextStyle.of(context).style,
-                          children: [
-                            TextSpan(
-                              text: ' (${item.year})',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      subtitle: Text(item.author['full_name']),
-                      leading: Image(
-                        image: Image.memory(base64Decode(item.cover)).image,
-                      ),
-                      trailing: howManyBorrows(item),
-                      onTap: () {
-                        Navigator.restorablePushNamed(
-                          context,
-                          onTapRouteName,
-                          arguments: {
-                            'book_map': item.to_map(),
-                            'on_submit_action': "updateBook",
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                );
+                return getBookCard(context, item, onTapRouteName);
               },
             );
           } else if (snapshot.hasError) {

@@ -113,4 +113,16 @@ class LibraryApi {
       throw Exception('Failed to load borrows count');
     }
   }
+
+  Future<http.Response> borrowBook(String bookId, int userId) {
+    return http.put(
+      Uri.https(
+        _baseUri.authority,
+        '/api/borrow-book/${bookId}',
+        {
+          'user_id': userId.toString(),
+        },
+      ),
+    );
+  }
 }

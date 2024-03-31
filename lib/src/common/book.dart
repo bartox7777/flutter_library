@@ -76,4 +76,25 @@ class Book {
       'year': year,
     };
   }
+
+  // map to book
+  factory Book.from_map(Map<String, dynamic> map) {
+    return Book(
+      addDate: map['add_date'],
+      author: {
+        'id': map['author']['author_id'],
+        'full_name': map['author']['full_name'],
+      },
+      bookId: map['book_id'],
+      category: map['category'],
+      cover: map['cover'],
+      description: map['description'],
+      isbn: map['isbn'],
+      numberOfCopies: map['number_of_copies'],
+      pages: map['pages'],
+      publisher: map['publisher'],
+      title: map['title'],
+      year: map['year'],
+    );
+  }
 }
