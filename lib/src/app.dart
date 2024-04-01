@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libsys/src/main/book_details_view.dart';
 import 'package:libsys/src/main/isbn_info_view.dart';
 
+import 'auth/login_view.dart';
 import 'handle_api/library_api.dart';
 import 'main/book_list_view.dart';
 import 'main/light_sensor_view.dart';
@@ -82,27 +83,20 @@ class MyApp extends StatelessWidget {
                     );
                     title = 'Lista książek';
                   default:
-                    // view = LoginView();
-                    // title = "Logowanie";
-                    // return Scaffold(
-                    //   appBar: AppBar(
-                    //     title: Text(title),
-                    //   ),
-                    //   body: Padding(
-                    //     padding: const EdgeInsetsDirectional.only(
-                    //         start: 20, end: 20),
-                    //     child: Container(
-                    //       child: view,
-                    //     ),
-                    //   ),
-                    // );
-                    view = BooksListView(
-                      books: LibraryApi().getBooks,
-                      title: 'Lista książek',
-                      restorationId: 'NewestBooksList',
-                      onTapRouteName: BookDetailsView.routeName,
+                    view = LoginView();
+                    title = "Logowanie";
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text(title),
+                      ),
+                      body: Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                            start: 20, end: 20),
+                        child: Container(
+                          child: view,
+                        ),
+                      ),
                     );
-                    title = 'Lista książek';
                 }
 
                 return Scaffold(
