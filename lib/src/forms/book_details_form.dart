@@ -69,7 +69,10 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
       builder: (context, snapshot) {
         List<DropdownMenuItem> items = [];
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Pobieranie danych...");
+          return Padding(
+            padding: const EdgeInsets.all(22.0),
+            child: Center(child: const Text("Pobieranie danych...")),
+          );
         }
         if (snapshot.hasError) {
           return const Text("Błąd podczas pobierania danych");
@@ -132,7 +135,6 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
             },
           ),
           // title
-
           TextFormField(
             controller: _textEditingController['title'],
             decoration: InputDecoration(
@@ -154,7 +156,7 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Autor jest wymagana';
+                      return 'Autor jest wymagany';
                     }
                     return null;
                   },
@@ -292,23 +294,25 @@ class _BookDetailsFormState extends State<BookDetailsForm> {
               },
               child: const Text('Wypożycz książkę'),
             ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamed(AllBookBorrowsView.routeName, arguments: book!);
-            },
-            child: const Text('Wszystkie wypożyczenia'),
-          ),
-          ElevatedButton(
-            onPressed: processForm(
-              context,
-              _formKey,
-              _textEditingController,
-              int.parse(book!['book_id']),
-              LibraryApi().updateBook,
+          if (on_submit_action == 'updateBook')
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(AllBookBorrowsView.routeName, arguments: book!);
+              },
+              child: const Text('Wszystkie wypożyczenia'),
             ),
-            child: const Text('Zapisz zmiany'),
-          ),
+          if (on_submit_action == 'updateBook')
+            ElevatedButton(
+              onPressed: processForm(
+                context,
+                _formKey,
+                _textEditingController,
+                int.parse(book!['book_id']),
+                LibraryApi().updateBook,
+              ),
+              child: const Text('Zapisz zmiany'),
+            ),
           if (on_submit_action == 'addBook')
             ElevatedButton(
               onPressed: processForm(

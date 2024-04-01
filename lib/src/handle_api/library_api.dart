@@ -139,4 +139,13 @@ class LibraryApi {
     print(jsonDecode(resp.body)['borrows']);
     return jsonDecode(resp.body)['borrows'];
   }
+
+  Future<http.Response> returnBook(int borrowId) {
+    return http.patch(
+      Uri.https(
+        _baseUri.authority,
+        '/api/return-book/${borrowId}',
+      ),
+    );
+  }
 }
