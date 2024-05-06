@@ -1,6 +1,8 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:libsys/src/main/book_details_view.dart';
 import 'package:libsys/src/main/isbn_info_view.dart';
+import 'package:lottie/lottie.dart';
 
 import 'auth/login_view.dart';
 import 'handle_api/library_api.dart';
@@ -12,9 +14,58 @@ import 'moderate/borrow_book_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
+class SplashScreen extends StatelessWidget {
+  SplashScreen({Key? key, required this.settingsController}) : super(key: key);
+
+  final SettingsController settingsController;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSplashScreen(
+      splash: Column(
+        children: [
+          Center(
+              child: Text("Witaj w LibSys!",
+                  style: TextStyle(
+                      fontSize: 30,
+                      color: Color.fromARGB(255, 255, 255, 255)))),
+          Center(
+            child: new Image(image: new AssetImage("assets/images/logo.gif")),
+          )
+        ],
+      ),
+      nextScreen: MySecondApp(
+        settingsController: settingsController,
+      ),
+      backgroundColor: Color.fromARGB(255, 150, 160, 163),
+    );
+  }
+}
+
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
   const MyApp({
+    super.key,
+    required this.settingsController,
+  });
+
+  final SettingsController settingsController;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: SplashScreen(settingsController: settingsController),
+    );
+    // Glue the SettingsController to the MaterialApp.
+    //
+    // The ListenableBuilder Widget listens to the SettingsController for changes.
+    // Whenever the user updates their settings, the MaterialApp is rebuilt.
+  }
+}
+
+/// The Widget that configures your application.
+class MySecondApp extends StatelessWidget {
+  const MySecondApp({
     super.key,
     required this.settingsController,
   });
@@ -87,8 +138,20 @@ class MyApp extends StatelessWidget {
                     title = "Logowanie";
                     return Scaffold(
                       appBar: AppBar(
-                        title: Text(title),
-                      ),
+                          title: Text(title),
+                          leading: Padding(
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              width: 40,
+                              height: 40,
+                              // left padding
+                              alignment: Alignment.centerLeft,
+                            ),
+                            padding: EdgeInsets.only(left: 10),
+                          )
+
+                          // icon
+                          ),
                       body: Padding(
                         padding: const EdgeInsetsDirectional.only(
                             start: 20, end: 20),
@@ -102,6 +165,16 @@ class MyApp extends StatelessWidget {
                 return Scaffold(
                   appBar: AppBar(
                     title: Text(title),
+                    leading: Padding(
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        width: 40,
+                        height: 40,
+                        // left padding
+                        alignment: Alignment.centerLeft,
+                      ),
+                      padding: EdgeInsets.only(left: 10),
+                    ),
                     actions: [
                       PopupMenuButton(
                         itemBuilder: (BuildContext context) {
