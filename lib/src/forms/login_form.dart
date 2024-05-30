@@ -44,7 +44,6 @@ class _LoginFormState extends State<LoginForm> {
             },
           ),
           // title
-
           TextFormField(
             controller: _textEditingController['password'],
             decoration: InputDecoration(
@@ -56,6 +55,9 @@ class _LoginFormState extends State<LoginForm> {
               }
               return null;
             },
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
           ),
           // author
 
@@ -67,6 +69,13 @@ class _LoginFormState extends State<LoginForm> {
                   'email': _textEditingController['email']!.text,
                   'password': _textEditingController['password']!.text,
                 };
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Logowanie...'),
+                    duration: const Duration(milliseconds: 500),
+                  ),
+                );
 
                 LibraryApi().login(loginCredentials).then((value) {
                   for (var i in jsonDecode(value.body)['flashes']) {
@@ -86,6 +95,7 @@ class _LoginFormState extends State<LoginForm> {
                 }).catchError((error, e) {
                   print(error);
                   print(e);
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Błąd podczas przetwarzania danych'),

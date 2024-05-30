@@ -2,7 +2,6 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:libsys/src/main/book_details_view.dart';
 import 'package:libsys/src/main/isbn_info_view.dart';
-import 'package:lottie/lottie.dart';
 
 import 'auth/login_view.dart';
 import 'handle_api/library_api.dart';
